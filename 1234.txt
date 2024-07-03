@@ -1,0 +1,750 @@
+<<<<Balanced Expression>>>>
+
+import java.util.Stack;
+
+public class Main {
+
+    public static boolean isBalanced(String exp) {
+        Stack<Character> stack = new Stack<>();
+
+        for (char ch : exp.toCharArray()) {
+            if (ch == '(' || ch == '{' || ch == '[') {
+                stack.push(ch);
+            } else if (ch == ')' || ch == '}' || ch == ']') {
+                if (stack.isEmpty()) {
+                    return false;
+                }
+                char top = stack.pop();
+                if (!isMatchingPair(top, ch)) {
+                    return false;
+                }
+            }
+        }
+        return stack.isEmpty();
+    }
+
+    private static boolean isMatchingPair(char open, char close) {
+        return (open == '(' && close == ')') ||
+               (open == '{' && close == '}') ||
+               (open == '[' && close == ']');
+    }
+
+    public static void main(String[] args) {
+        String exp = "[(a+b)+{(c+d)*(e/f)}]";
+        System.out.println(isBalanced(exp));  // Output: true
+    }
+}
+
+
+<<<<Triplet with the given sum in array>>>>
+import java.util.Arrays;
+
+public class Main {
+
+    public static void findTriplet(int[] arr, int targetSum) {
+        Arrays.sort(arr); // Sort the array
+
+        for (int i = 0; i < arr.length - 2; i++) {
+            int left = i + 1;
+            int right = arr.length - 1;
+
+            while (left < right) {
+                int currentSum = arr[i] + arr[left] + arr[right];
+
+                if (currentSum == targetSum) {
+                    System.out.println("Triplet exists.");
+                    return;
+                } else if (currentSum < targetSum) {
+                    left++;
+                } else {
+                    right--;
+                }
+            }
+        }
+        System.out.println("Triplet doesn't exist.");
+    }
+
+    public static void main(String[] args) {
+        // Example usage
+        String inputArray = "12, 3, 4, 1, 6, 9";
+        int targetSum = 24;
+
+        // Parsing the input
+        String[] arrString = inputArray.split(", ");
+        int[] arr = new int[arrString.length];
+        for (int i = 0; i < arrString.length; i++) {
+            arr[i] = Integer.parseInt(arrString[i]);
+        }
+
+        findTriplet(arr, targetSum);
+    }
+}
+
+<<<<Longest switching contiguous subarray>>>
+import java.util.Scanner;
+
+public class Main {
+
+    public static int longestSwitchingSubarray(int[] arr) {
+        int n = arr.length;
+        if (n == 0) return 0;
+
+        int maxLength = 1; // At least every element is a switching subarray of length 1
+        int start = 0;
+
+        for (int i = 1; i < n; i++) {
+            if ((i % 2 == 0 && arr[i] != arr[start]) || (i % 2 == 1 && arr[i] != arr[start + 1])) {
+                start = i - 1;
+                if (i % 2 == 0) {
+                    start++;
+                }
+            }
+            maxLength = Math.max(maxLength, i - start + 1);
+        }
+
+        return maxLength;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        
+        int n = scanner.nextInt();
+        int[] arr = new int[n];
+        
+        for (int i = 0; i < n; i++) {
+            arr[i] = scanner.nextInt();
+        }
+
+        System.out.println(longestSwitchingSubarray(arr));
+    }
+}
+
+<<<Palindrome or not>>>>
+
+import java.util.Scanner;
+
+public class Main {
+
+    public static String isPalindrome(String s) {
+        // Convert to lowercase and filter out non-alphanumeric characters
+        StringBuilder filteredString = new StringBuilder();
+        for (char ch : s.toCharArray()) {
+            if (Character.isLetterOrDigit(ch)) {
+                filteredString.append(Character.toLowerCase(ch));
+            }
+        }
+
+        // Check if the filtered string is a palindrome
+        String filtered = filteredString.toString();
+        String reversed = filteredString.reverse().toString();
+
+        return filtered.equals(reversed) ? "YES" : "NO";
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        String input = scanner.nextLine();
+        scanner.close();
+
+        System.out.println(isPalindrome(input));
+    }
+}
+
+<<<<Print a given matrix in spiral form.>>>>
+import java.util.Scanner;
+
+class SpiralMatrix {
+
+    public static void printSpiral(int[][] matrix, int n) {
+        int top = 0, bottom = n - 1, left = 0, right = n - 1;
+
+        while (top <= bottom && left <= right) {
+            // Print top row (left to right)
+            for (int i = left; i <= right; i++) {
+                System.out.print(matrix[top][i] + " ");
+            }
+            top++;
+
+            // Print right column (top to bottom)
+            for (int i = top; i <= bottom; i++) {
+                System.out.print(matrix[i][right] + " ");
+            }
+            right--;
+
+            if (top <= bottom) {
+                // Print bottom row (right to left)
+                for (int i = right; i >= left; i--) {
+                    System.out.print(matrix[bottom][i] + " ");
+                }
+                bottom--;
+            }
+
+            if (left <= right) {
+                // Print left column (bottom to top)
+                for (int i = bottom; i >= top; i--) {
+                    System.out.print(matrix[i][left] + " ");
+                }
+                left++;
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int n = scanner.nextInt(); // Size of the square matrix
+        int[][] matrix = new int[n][n];
+
+        // Reading the matrix
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                matrix[i][j] = scanner.nextInt();
+            }
+        }
+        scanner.close();
+
+        // Printing the matrix in spiral form
+        printSpiral(matrix, n);
+    }
+}
+
+<<<Smaller or Equal Value in Sorted Array>>>>
+import java.util.Scanner;
+
+ class SmallerEqualValue {
+
+    public static int countSmallerEqual(int[] A, int B) {
+        int low = 0, high = A.length - 1;
+        int result = 0;
+
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+
+            if (A[mid] <= B) {
+                result = mid + 1; // At least mid+1 elements are <= B
+                low = mid + 1;    // Search in the upper half
+            } else {
+                high = mid - 1;   // Search in the lower half
+            }
+        }
+
+        return result;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Read input size
+        int N = scanner.nextInt();
+
+        // Read array A
+        int[] A = new int[N];
+        for (int i = 0; i < N; i++) {
+            A[i] = scanner.nextInt();
+        }
+
+        // Read integer B
+        int B = scanner.nextInt();
+        scanner.close();
+
+        // Find number of elements <= B in array A
+        int count = countSmallerEqual(A, B);
+        System.out.println(count);
+    }
+}
+
+<<<Reduce size>>>
+import java.util.*;
+class Main
+{
+	public static void main (String[] args) throws java.lang.Exception
+	{
+		// your code goes here
+        Scanner sc = new Scanner(System.in);
+        String str = sc.nextLine();
+        int n = str.length();
+        String s = "";
+        Map<Character, Integer> mp = new HashMap<Character, Integer>();
+        char arr[] = str.toCharArray();
+        
+        for(char c: arr){
+            if(!mp.containsKey(c)){
+                mp.put(c,1);
+            }
+            else{
+                int count = mp.get(c);
+                mp.put(c,count+1);
+            }
+        }
+        for(char c : mp.keySet()){
+            int temp = mp.get(c);
+            if(temp == 1){
+                s += c+ ""+'1';
+            }
+            else{
+                s += c+ "" + mp.get(c);
+            }
+        }
+        System.out.println(s);
+
+	}
+}
+
+<<<Highest number of repeated letters>>>
+import java.util.*;
+class Main
+{
+    public static String wordWithMostRepeatedLetters(String inputString) {
+        String[] words = inputString.split(" ");
+        int maxRepeated = 0;
+        String resultWord = "-1";
+        
+        for (String word : words) {
+            int repeatedCount = countRepeatedLetters(word);
+            if (repeatedCount > maxRepeated) {
+                maxRepeated = repeatedCount;
+                resultWord = word;
+            }
+        }
+        
+        return resultWord;
+    }
+    
+    private static int countRepeatedLetters(String word) {
+        Map<Character, Integer> letterCount = new HashMap<>();
+        
+        for (char letter : word.toCharArray()) {
+            letterCount.put(letter, letterCount.getOrDefault(letter, 0) + 1);
+        }
+        
+        int repeatedCount = 0;
+        for (int count : letterCount.values()) {
+            if (count > 1) {
+                repeatedCount++;
+            }
+        }
+        
+        return repeatedCount;
+    }
+    
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String inputString = sc.nextLine();
+        
+        String result = wordWithMostRepeatedLetters(inputString);
+        System.out.println( result);
+    }
+}
+
+<<<Print Pascal's triangle>>>>
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+class PascalTriangle {
+    public static List<Integer> getRow(int rowIndex) {
+        List<Integer> row = new ArrayList<>();
+        
+        if (rowIndex < 0)
+            return row;
+        
+        row.add(1);
+        
+        for (int i = 1; i <= rowIndex; i++) {
+            for (int j = i - 1; j > 0; j--) {
+                row.set(j, row.get(j) + row.get(j - 1)); 
+            }
+            row.add(1); 
+        }
+        
+        return row;
+    }
+    
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int n = scanner.nextInt();
+        
+        List<Integer> row = getRow(n-1);
+        for (int num : row) {
+            System.out.print(num + " ");
+        }
+        System.out.println();
+        
+        scanner.close(); 
+    }
+}
+
+<<<Finding difference>>>>
+import java.util.*;
+
+class Main {
+    public static int findMinimumDifference(int[] arr, int n, int m) {
+        if (m == 0 || n == 0 || m > n)
+            return -1; // 
+        
+        Arrays.sort(arr);
+        
+        int minDiff = Integer.MAX_VALUE;
+    
+        for (int i = 0; i + m - 1 < n; i++) {
+            int diff = arr[i + m - 1] - arr[i];
+            if (diff < minDiff) {
+                minDiff = diff;
+            }
+        }
+        
+        return minDiff;
+    }
+
+    public static void main(String args[]) {
+        Scanner sc = new Scanner(System.in);
+        
+        int n = sc.nextInt();
+        
+    
+        int[] arr = new int[n];
+        for (int i = 0; i < n-1; i++) {
+            arr[i] = sc.nextInt();
+        }
+    
+        int m = sc.nextInt();
+    
+        int minDifference = findMinimumDifference(arr, n, m);
+        if (minDifference == -1) {
+            System.out.println("");
+        } else {
+            System.out.println(minDifference);
+        }
+        
+        // Close the scanner
+        sc.close();
+    }
+}
+
+<<<Lucky sevens>>>
+/* package whatever; // don't place package name! */
+
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+
+/* Name of the class has to be "Main" only if the class is public. */
+class Main {
+    public static void Lucky(int[] arr, int n) {
+        for (int i = 0; i < arr.length; i++) {
+            int res = arr[i] + arr[i + 1] + arr[i + 2];
+
+            if (res == 7) {
+                System.out.print("true");
+                break;
+            }
+            if (i > n / 2) {
+                System.out.print("false");
+                break;
+            }
+        }
+    }
+
+    public static void main(String[] args) throws java.lang.Exception {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int[] arr = new int[n];
+
+        for (int i = 0; i < n; i++) {
+            arr[i] = sc.nextInt();
+        }
+
+        Lucky(arr, n);
+    }
+}
+
+<<Unique Digits>>>
+
+/* package whatever; // don't place package name! */
+
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+
+/* Name of the class has to be "Main" only if the class is public. */
+class Main
+{
+    public static void UniqueDigit(int n1, int n2)
+    {
+        if(n1<=n2)
+        {
+            int res = n2-n1;
+            System.out.print(res);
+        }
+    }
+	public static void main (String[] args) throws java.lang.Exception
+	{
+        Scanner sc = new Scanner(System.in);
+        int n1 = sc.nextInt();
+        int n2 = sc.nextInt();
+        UniqueDigit(n1,n2);
+	}
+}
+
+<<<Anagrams checking>>>
+import java.lang.reflect.Array;
+import java.util.*;
+
+public class Main {
+    public static void anagram(String s1, String s2) {
+        if (s1.length() != s2.length()) {
+            System.out.print("False");
+        }
+
+        char[] arr1 = s1.toCharArray();
+        char[] arr2 = s2.toCharArray();
+
+        Arrays.sort(arr1);
+        Arrays.sort(arr2);
+        int count = 0;
+        for (int i = 0; i < arr1.length; i++) {
+            if (arr1[i] == arr2[i]) {
+                count++;
+            }
+        }
+
+        if (count == arr1.length) {
+            System.out.print("True");
+        }
+    }
+
+    public static void main(String[] args) {
+        String s1 = "listen";
+        String s2 = "silent";
+        anagram(s1, s2);
+    }
+}
+
+<<<Valid String Checker>>>
+
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+
+class Main {
+    public static void StringCheck(String str) {
+        char[] arr = str.toCharArray();
+        for (int i = 0; i < arr.length - 1; i++) {
+            if ((arr[i] == 'a' && arr[i + 1] == 'a')
+                    || (arr[i] == 'a' && arr[i + 1] == 'b' && arr[i + 2] == 'b')) {
+                System.out.print("YES");
+                break;
+            } else {
+                System.out.print("NO");
+                break;
+
+            }
+        }
+    }
+
+    public static void main(String[] args) throws java.lang.Exception {
+        Scanner sc = new Scanner(System.in);
+        String str = sc.nextLine();
+        StringCheck(str);
+    }
+}
+
+<<<<Cyclically rotate the array>>>
+
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        int n = sc.nextInt();
+        int k = sc.nextInt();
+        int[] arr = new int[n];
+
+        for (int i = 0; i < n; i++) {
+            arr[i] = sc.nextInt();
+        }
+
+        k = k % n;
+
+        int[] rotatedarr = new int[n];
+
+        for (int i = 0; i < n; i++) {
+            rotatedarr[(i + k) % n] = arr[i];
+        }
+
+        for (int i = 0; i < n; i++) {
+            System.out.print(rotatedarr[i] + " ");
+        }
+    }
+}
+
+<<<String Classification Rules>>>
+
+import java.util.*;
+
+public class Main {
+    public static boolean vowel(char ch) {
+        if (ch == 'a' || ch == 'e' || ch == 'i' || ch == 'o' || ch == 'u') {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean checkBad(String subString, int limit, boolean checkVowel) {
+        int count = 0;
+
+        for (int i = 0; i < subString.length(); i++) {
+            char a = subString.charAt(i);
+
+            if (a == '?' || (checkVowel && vowel(a)) || (!checkVowel && !vowel(a))) {
+                count++;
+            } else {
+                count = 0;
+            }
+
+            if (count > limit) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean Bad(String S) {
+        return checkBad(S, 5, true) || checkBad(S, 3, false);
+    }
+
+    public static void classifier(String S) {
+        if (Bad(S)) {
+            System.out.println("BAD");
+        } else {
+            System.out.println("GOOD");
+        }
+    }
+
+    public static void main(String[] args) {
+        String str = "a?eiou?";
+        classifier(str);
+    }
+}
+
+<<<<Seating Arrangements>>
+
+import java.util.Scanner;
+
+class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int T = scanner.nextInt();
+        for (int t = 0; t < T; t++) {
+            int R = scanner.nextInt();
+            int N = scanner.nextInt();
+            System.out.println(calculateArrangements(R, N));
+        }
+        scanner.close();
+    }
+
+    private static int calculateArrangements(int R, int N) {
+        if (N % R == 0) {
+            return factorial(N) / (factorial(N / R) * R);
+        }
+        int minAttendeesPerTable = N / R;
+        int extraAttendees = N % R;
+        int[] attendees = new int[R];
+        for (int i = 0; i < R; i++) {
+            attendees[i] = minAttendeesPerTable;
+            if (extraAttendees > 0) {
+                attendees[i]++;
+                extraAttendees--;
+            }
+        }
+        int result = factorial(N);
+        for (int count : attendees) {
+            result /= factorial(count);
+        }
+        return result;
+    }
+
+    private static int factorial(int n) {
+        int result = 1;
+        for (int i = 2; i <= n; i++) {
+            result *= i;
+        }
+        return result;
+    }
+}
+
+<<<sum of every pair>>>
+
+/* package whatever; // don't place package name! */
+
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+
+/* Name of the class has to be "Main" only if the class is public. */
+class Main
+{
+	public static void main (String[] args) throws java.lang.Exception
+	{
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int k = sc.nextInt();
+
+        int[] a = new int[n];
+        for(int i=0;i<n;i++)
+        {
+            a[i] = sc.nextInt();
+        }
+        int[] b = new int[n];
+        for(int i=0; i<n; i++)
+        {
+            b[i] = sc.nextInt();
+        }
+
+        Arrays.sort(a);
+
+        Arrays.sort(b);
+        reverse(b);
+
+        boolean possible = true;
+        for(int i=0; i<n ; i++)
+        {
+            if(a[i]+b[i] < k )
+            {
+                possible = false;
+                break;
+            }
+        }
+        if(possible)
+        {
+            System.out.print("Yes");
+        }
+        else
+        {
+            System.out.print("No");
+        }
+	}
+
+    public static void reverse(int[] arr)
+    {
+        int start = 0;
+        int end = arr.length-1;
+
+        while(start<end)
+        {
+            int temp = arr[start];
+            arr[start] = arr[end];
+            arr[end] = temp;
+
+            start++;
+            end--;
+        }
+    }
+}
+
+
+
+
+
+
+
